@@ -47,4 +47,25 @@ return require('packer').startup(function(use)
 	  run = ':Cord update',
   }
 
+  use("neovim/nvim-lspconfig")
+
+  use {
+	  "folke/lazydev.nvim",
+	  ft = "lua",
+	  config = function()
+		  require("lazydev").setup({
+			  library = {
+				  { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			  },
+		  })
+	  end,
+  }
+
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/cmp-cmdline'
+  use 'hrsh7th/nvim-cmp'
+  use "hrsh7th/cmp-nvim-lsp-signature-help"
+
 end)
