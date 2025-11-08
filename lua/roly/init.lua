@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
   end,
 })
 
+vim.opt.number = true
+
 require("roly.remap")
 print("hello from roly :o")
-
