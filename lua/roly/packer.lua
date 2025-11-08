@@ -1,4 +1,5 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
+require('feline').setup()
 
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
@@ -14,8 +15,14 @@ return require('packer').startup(function(use)
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
 
-  -- theme
-  use "olimorris/onedarkpro.nvim"
+  -- cattpuccin integrated theme
+  use { "catppuccin/nvim", as = "catppuccin" }
+
+  -- status bar
+  use "famiu/feline.nvim"
+
+  -- custom window seperator line
+  use 'nvim-zh/colorful-winsep.nvim'
 
   -- treesitter parser
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
@@ -28,8 +35,20 @@ return require('packer').startup(function(use)
   -- undo tree
   use('mbbill/undotree')
 
+  -- git visuals
+  use "lewis6991/gitsigns.nvim"
+
   -- git wrapper
   use('tpope/vim-fugitive')
+
+  -- git intergration
+  use "NeogitOrg/neogit"
+
+  -- comment stuff out
+  use "tpope/vim-commentary"
+
+  -- beatiful diffs
+  use "sindrets/diffview.nvim"
 
   -- file explorer
   use({
@@ -67,5 +86,8 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/nvim-cmp'
   use "hrsh7th/cmp-nvim-lsp-signature-help"
+
+  -- notification
+  use 'rcarriga/nvim-notify'
 
 end)

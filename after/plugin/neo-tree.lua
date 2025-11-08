@@ -348,3 +348,4 @@ require("neo-tree").setup({
     },
   },
 })
+
