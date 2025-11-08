@@ -21,9 +21,6 @@ return require('packer').startup(function(use)
   -- status bar
   use "famiu/feline.nvim"
 
-  -- custom window seperator line
-  use 'nvim-zh/colorful-winsep.nvim'
-
   -- treesitter parser
   use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
   use('nvim-treesitter/playground')
