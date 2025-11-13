@@ -15,8 +15,14 @@ return require('packer').startup(function(use)
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
 
+  -- autocomplete icons
+  use "onsails/lspkind.nvim"
+
   -- cattpuccin integrated theme
   use { "catppuccin/nvim", as = "catppuccin" }
+
+  -- onedark for syntax highlighting
+  use "olimorris/onedarkpro.nvim"
 
   -- status bar
   use "famiu/feline.nvim"
@@ -86,5 +92,10 @@ return require('packer').startup(function(use)
 
   -- notification
   use 'rcarriga/nvim-notify'
+
+  -- terminal
+  use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+	  require("toggleterm").setup()
+  end}
 
 end)

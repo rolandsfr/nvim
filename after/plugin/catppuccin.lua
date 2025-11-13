@@ -6,10 +6,10 @@ require("catppuccin").setup({
         light = "latte",
         dark = "mocha",
     },
-    transparent_background = true, -- disables setting the background color.
+    transparent_background = false, -- disables setting the background color.
     float = {
-        transparent = false, -- enable transparent floating windows
-        solid = false, -- use solid styling for floating windows, see |winborder|
+        transparent = true, -- enable transparent floating windows
+        solid = true, -- use solid styling for floating windows, see |winborder|
     },
     show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
     term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
@@ -78,3 +78,33 @@ require("catppuccin").setup({
 
 -- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"
+-- then load OneDark highlight groups (syntax)
+local colors = require("onedarkpro.helpers").get_colors("onedark") -- or "onelight"
+local set_hl = vim.api.nvim_set_hl
+
+-- 3️⃣ Apply OneDarkPro syntax highlights manually
+-- You can extend or tweak these groups as you like
+set_hl(0, "Keyword",     { fg = colors.purple })
+set_hl(0, "Function",    { fg = colors.blue })
+set_hl(0, "String",      { fg = colors.green })
+set_hl(0, "Type",        { fg = colors.yellow })
+set_hl(0, "Constant",    { fg = colors.orange })
+set_hl(0, "Number",      { fg = colors.orange })
+set_hl(0, "Boolean",     { fg = colors.red })
+set_hl(0, "Comment",     { fg = colors.gray, italic = true })
+set_hl(0, "Operator",    { fg = colors.cyan })
+set_hl(0, "Identifier",  { fg = colors.cyan })
+
+-- Variables, fields, and properties
+set_hl(0, "@variable",              { fg = colors.red })  -- all variables
+set_hl(0, "@variable.builtin",      { fg = colors.red })
+set_hl(0, "@variable.parameter",    { fg = colors.red })
+set_hl(0, "@field",                 { fg = colors.red })  -- object fields
+set_hl(0, "@property",              { fg = colors.red })  -- object properties
+
+-- (optional) also apply to LSP semantic tokens, for some language servers
+set_hl(0, "@lsp.type.variable",     { fg = colors.red })
+set_hl(0, "@lsp.type.property",     { fg = colors.red })
+set_hl(0, "@lsp.typemod.property",  { fg = colors.red })
+set_hl(0, "@lsp.typemod.member",    { fg = colors.red })
+
