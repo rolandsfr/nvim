@@ -5,97 +5,100 @@ require('feline').setup()
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
-  -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+    -- Packer can manage itself
+    use 'wbthomason/packer.nvim'
 
-  -- telescopee
-  use {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.8',
-	  -- or                            , branch = '0.1.x',
-	  requires = { {'nvim-lua/plenary.nvim'} }
-  }
+    -- telescopee
+    use {
+        'nvim-telescope/telescope.nvim', tag = '0.1.8',
+        -- or                            , branch = '0.1.x',
+        requires = { {'nvim-lua/plenary.nvim'} }
+    }
 
-  -- autocomplete icons
-  use "onsails/lspkind.nvim"
+    -- autocomplete icons
+    use "onsails/lspkind.nvim"
 
-  -- cattpuccin integrated theme
-  use { "catppuccin/nvim", as = "catppuccin" }
+    -- cattpuccin integrated theme
+    use { "catppuccin/nvim", as = "catppuccin" }
 
-  -- onedark for syntax highlighting
-  use "olimorris/onedarkpro.nvim"
+    -- onedark for syntax highlighting
+    use "olimorris/onedarkpro.nvim"
 
-  -- status bar
-  use "famiu/feline.nvim"
+    -- status bar
+    use "famiu/feline.nvim"
 
-  -- treesitter parser
-  use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
-  use('nvim-treesitter/playground')
+    -- treesitter parser
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
+    use('nvim-treesitter/playground')
 
-  -- harpoon
-  use('nvim-lua/plenary.nvim')
-  use('ThePrimeagen/harpoon')
+    -- harpoon
+    use('nvim-lua/plenary.nvim')
+    use('ThePrimeagen/harpoon')
 
-  -- undo tree
-  use('mbbill/undotree')
+    -- undo tree
+    use('mbbill/undotree')
 
-  -- git visuals
-  use "lewis6991/gitsigns.nvim"
+    -- git visuals
+    use "lewis6991/gitsigns.nvim"
 
-  -- git wrapper
-  use('tpope/vim-fugitive')
+    -- git wrapper
+    use('tpope/vim-fugitive')
 
-  -- git intergration
-  use "NeogitOrg/neogit"
+    -- git intergration
+    use "NeogitOrg/neogit"
 
-  -- comment stuff out
-  use "tpope/vim-commentary"
+    -- comment stuff out
+    use "tpope/vim-commentary"
 
-  -- beatiful diffs
-  use "sindrets/diffview.nvim"
+    -- beatiful diffs
+    use "sindrets/diffview.nvim"
 
-  -- file explorer
-  use({
-	  "nvim-neo-tree/neo-tree.nvim",
-	  branch = "v3.x",
-	  requires = {
-		  "nvim-lua/plenary.nvim",
-		  "MunifTanjim/nui.nvim",
-		  "nvim-tree/nvim-web-devicons", 
-	  }
-  })
+    -- file explorer
+    use({
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons", 
+        }
+    })
 
-  use {
-	  'vyfor/cord.nvim',
-	  run = ':Cord update',
-  }
+    use {
+        'vyfor/cord.nvim',
+        run = ':Cord update',
+    }
 
-  use("neovim/nvim-lspconfig")
+    use("neovim/nvim-lspconfig")
 
-  use {
-	  "folke/lazydev.nvim",
-	  ft = "lua",
-	  config = function()
-		  require("lazydev").setup({
-			  library = {
-				  { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-			  },
-		  })
-	  end,
-  }
+    use {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        config = function()
+            require("lazydev").setup({
+                library = {
+                    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                },
+            })
+        end,
+    }
 
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'hrsh7th/nvim-cmp'
-  use "hrsh7th/cmp-nvim-lsp-signature-help"
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-buffer'
+    use 'hrsh7th/cmp-path'
+    use 'hrsh7th/cmp-cmdline'
+    use 'hrsh7th/nvim-cmp'
+    use "hrsh7th/cmp-nvim-lsp-signature-help"
 
-  -- notification
-  use 'rcarriga/nvim-notify'
+    -- notification
+    use 'rcarriga/nvim-notify'
 
-  -- terminal
-  use {"akinsho/toggleterm.nvim", tag = '*', config = function()
-	  require("toggleterm").setup()
-  end}
+    -- terminal
+    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+        require("toggleterm").setup()
+    end}
+
+    -- autoclose 
+    use 'nvim-mini/mini.pairs'
 
 end)

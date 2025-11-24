@@ -10,5 +10,12 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
 vim.opt.number = true
 
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.smarttab = true
+vim.opt.expandtab = true   -- optional
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+
 require("roly.remap")
 print("hello from roly :o")
