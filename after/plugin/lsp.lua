@@ -1,111 +1,177 @@
 local function switch_source_header(bufnr, client)
-  local method_name = 'textDocument/switchSourceHeader'
-  ---@diagnostic disable-next-line:param-type-mismatch
-  if not client or not client:supports_method(method_name) then
-    return vim.notify(('method %s is not supported by any servers active on the current buffer'):format(method_name))
-  end
-  local params = vim.lsp.util.make_text_document_params(bufnr)
-  ---@diagnostic disable-next-line:param-type-mismatch
-  client:request(method_name, params, function(err, result)
-    if err then
-      error(tostring(err))
+    local method_name = 'textDocument/switchSourceHeader'
+    ---@diagnostic disable-next-line:param-type-mismatch
+    if not client or not client:supports_method(method_name) then
+        return vim.notify(('method %s is not supported by any servers active on the current buffer'):format(method_name))
     end
-    if not result then
-      vim.notify('corresponding file cannot be determined')
-      return
-    end
-    vim.cmd.edit(vim.uri_to_fname(result))
-  end, bufnr)
+    local params = vim.lsp.util.make_text_document_params(bufnr)
+    ---@diagnostic disable-next-line:param-type-mismatch
+    client:request(method_name, params, function(err, result)
+        if err then
+            error(tostring(err))
+        end
+        if not result then
+            vim.notify('corresponding file cannot be determined')
+            return
+        end
+        vim.cmd.edit(vim.uri_to_fname(result))
+    end, bufnr)
 end
 
 local function symbol_info(bufnr, client)
-  local method_name = 'textDocument/symbolInfo'
-  ---@diagnostic disable-next-line:param-type-mismatch
-  if not client or not client:supports_method(method_name) then
-    return vim.notify('Clangd client not found', vim.log.levels.ERROR)
-  end
-  local win = vim.api.nvim_get_current_win()
-  local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
-  ---@diagnostic disable-next-line:param-type-mismatch
-  client:request(method_name, params, function(err, res)
-    if err or #res == 0 then
-      -- Clangd always returns an error, there is no reason to parse it
-      return
+    local method_name = 'textDocument/symbolInfo'
+    ---@diagnostic disable-next-line:param-type-mismatch
+    if not client or not client:supports_method(method_name) then
+        return vim.notify('Clangd client not found', vim.log.levels.ERROR)
     end
-    local container = string.format('container: %s', res[1].containerName) ---@type string
-    local name = string.format('name: %s', res[1].name) ---@type string
-    vim.lsp.util.open_floating_preview({ name, container }, '', {
-      height = 2,
-      width = math.max(string.len(name), string.len(container)),
-      focusable = false,
-      focus = false,
-      title = 'Symbol Info',
-    })
-  end, bufnr)
+    local win = vim.api.nvim_get_current_win()
+    local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+    ---@diagnostic disable-next-line:param-type-mismatch
+    client:request(method_name, params, function(err, res)
+        if err or #res == 0 then
+            -- Clangd always returns an error, there is no reason to parse it
+            return
+        end
+        local container = string.format('container: %s', res[1].containerName) ---@type string
+        local name = string.format('name: %s', res[1].name) ---@type string
+        vim.lsp.util.open_floating_preview({ name, container }, '', {
+            height = 2,
+            width = math.max(string.len(name), string.len(container)),
+            focusable = false,
+            focus = false,
+            title = 'Symbol Info',
+        })
+    end, bufnr)
 end
 
 
 vim.lsp.config('luals', {
-  cmd = {'lua-language-server'},
-  filetypes = {'lua'},
-  root_markers = {'.luarc.json', '.luarc.jsonc'},
-  settings = {
-	  Lua = {
-		  runtime = {
-			  version = "LuaJIT", -- Neovim uses LuaJIT
-		  },
-		  diagnostics = {
-			  globals = { "vim" }, -- <— this fixes the red underline
-		  },
-		  workspace = {
-			  library = {
-				  vim.env.VIMRUNTIME, -- include Neovim runtime files
-			  },
-			  checkThirdParty = false, -- avoid asking about third-party libraries
-		  },
-		  telemetry = { enable = false },
-	  },
-  }
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = { '.luarc.json', '.luarc.jsonc' },
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT", -- Neovim uses LuaJIT
+            },
+            diagnostics = {
+                globals = { "vim" }, -- <— this fixes the red underline
+            },
+            workspace = {
+                library = {
+                    vim.env.VIMRUNTIME,  -- include Neovim runtime files
+                },
+                checkThirdParty = false, -- avoid asking about third-party libraries
+            },
+            telemetry = { enable = false },
+        },
+    }
 })
 
 vim.lsp.config("clangd", {
-	cmd = { "clangd" },
-	filetypes = { "c", "cpp", "objc", "objcpp" },
-	capabilities = {
-		offsetEncoding = { "utf-8", "utf-16" },
-		textDocument = {
-			completion = {
-				editsNearCursor = true
-			}
-		}
-	},
-	on_attach = function(client, bufnr)
-		vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdSwitchSourceHeader', function()
-			switch_source_header(bufnr, client)
-		end, { desc = 'Switch between source/header' })
+    cmd = { "clangd" },
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+    capabilities = {
+        offsetEncoding = { "utf-8", "utf-16" },
+        textDocument = {
+            completion = {
+                editsNearCursor = true
+            }
+        }
+    },
+    on_attach = function(client, bufnr)
+        vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdSwitchSourceHeader', function()
+            switch_source_header(bufnr, client)
+        end, { desc = 'Switch between source/header' })
 
-		vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdShowSymbolInfo', function()
-			symbol_info(bufnr, client)
-		end, { desc = 'Show symbol info' })
-	end,
+        vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdShowSymbolInfo', function()
+            symbol_info(bufnr, client)
+        end, { desc = 'Show symbol info' })
+    end,
 
 })
 
+function format_and_fix(event)
+    local bufnr = event.buf
+    local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+    for _, client in ipairs(clients) do
+        local name = client.name
+
+        -- format client filter, to only format items for one single client, so a format operation for biome doesn't drag tsserver in.
+        local client_filter = function(formatter) return formatter.name == client.name end
+
+        if name == "biome" and valid_biome then
+            -- Step 1: Apply fixAll synchronously
+            local params = vim.lsp.util.make_range_params(nil, client.offset_encoding)
+            params.context = {
+                only = { "source.fixAll.biome" },
+                diagnostics = {},
+            }
+
+            local fixall_results = vim.lsp.buf_request_sync(
+                bufnr,
+                'textDocument/codeAction',
+                params,
+                1000 -- 1 second timeout
+            )
+
+            if fixall_results then
+                -- Don't need client id, since only biome is running this action
+                ---@diagnostic disable-next-line: unused-local
+                for _client_id, result in pairs(fixall_results) do
+                    if result.result then
+                        for _, action in ipairs(result.result) do
+                            if action.edit then
+                                vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+                            elseif action.command then
+                                client:exec_cmd(action.command)
+                            end
+                        end
+                    end
+                end
+            end
+
+            -- Step 2: Wait a tiny bit for edits to settle
+            vim.cmd('redraw')
+
+            -- Step 3: Format synchronously
+            vim.lsp.buf.format({ async = false, filter = client_filter, timeout_ms = 3000 })
+        end
+    end
+end
+
 vim.lsp.config("tsserver", {
-	cmd = { "typescript-language-server", "--stdio" },
-	filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-	root_markers = { "tsconfig.json", "package.json", ".git" },
+    cmd = { "typescript-language-server", "--stdio" },
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+    root_markers = { "tsconfig.json", "package.json", ".git" },
+    on_attach = function(client, bufnr)
+        local opts = { buffer = bufnr, silent = true }
+
+        vim.keymap.set("n", "<leader>ca", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+    end,
+})
+
+vim.lsp.config("biome", {
+    on_attach = function(client, bufnr)
+        local opts = { buffer = bufnr, silent = true }
+
+        vim.keymap.set("n", "<leader>ca", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+    end,
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(event)
-    local bufmap = function(mode, rhs, lhs)
-      vim.keymap.set(mode, rhs, lhs, {buffer = event.buf})
-    end
+    callback = function(event)
+        local bufmap = function(mode, rhs, lhs)
+            vim.keymap.set(mode, rhs, lhs, { buffer = event.buf })
+        end
 
-    bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
-    bufmap('i', '<C-h>', '<cmd>lua vim.lsp.buf.signature_help()')
-  end,
+        bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
+        bufmap('i', '<C-h>', '<cmd>lua vim.lsp.buf.signature_help()')
+    end,
 })
 
 vim.lsp.enable('luals')
