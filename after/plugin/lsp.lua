@@ -111,3 +111,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.lsp.enable('luals')
 vim.lsp.enable('tsserver')
 vim.lsp.enable('clangd')
+vim.lsp.enable('biome')

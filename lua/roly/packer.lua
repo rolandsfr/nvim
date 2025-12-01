@@ -12,7 +12,7 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.8',
         -- or                            , branch = '0.1.x',
-        requires = { {'nvim-lua/plenary.nvim'} }
+        requires = { { 'nvim-lua/plenary.nvim' } }
     }
 
     -- autocomplete icons
@@ -28,7 +28,7 @@ return require('packer').startup(function(use)
     use "famiu/feline.nvim"
 
     -- treesitter parser
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use('nvim-treesitter/playground')
 
     -- harpoon
@@ -60,9 +60,14 @@ return require('packer').startup(function(use)
         requires = {
             "nvim-lua/plenary.nvim",
             "MunifTanjim/nui.nvim",
-            "nvim-tree/nvim-web-devicons", 
+            "nvim-tree/nvim-web-devicons",
         }
     })
+
+    -- formatting
+    use 'stevearc/conform.nvim'
+
+    use 'rachartier/tiny-inline-diagnostic.nvim'
 
     use {
         'vyfor/cord.nvim',
@@ -94,11 +99,13 @@ return require('packer').startup(function(use)
     use 'rcarriga/nvim-notify'
 
     -- terminal
-    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
         require("toggleterm").setup()
-    end}
+    end }
 
-    -- autoclose 
+    -- autoclose
     use 'nvim-mini/mini.pairs'
 
+    -- gh copilot
+    use 'github/copilot.vim'
 end)
